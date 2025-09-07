@@ -1,6 +1,6 @@
 "use client";
 
-import LogOut from "../(auth)/logout/logout";
+import LogOut from "../../(auth)/logout/logout";
 
 export default function Dashboard() {
   return (
