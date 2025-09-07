@@ -1,9 +1,10 @@
 // lib/auth.ts
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { db as drizzleDb } from "../../db/drizzle_client"; 
-import * as schema from "../../db/schema"; 
+import { db as drizzleDb } from "../../db/drizzle_client";
+import * as schema from "../../db/schema";
 import { nextCookies } from "better-auth/next-js";
+import { oneTap } from "better-auth/plugins";
 
 export const auth = betterAuth({
   database: drizzleAdapter(drizzleDb, {
@@ -11,20 +12,13 @@ export const auth = betterAuth({
     schema,
   }),
 
-  user: {
-    fields: {
-      createdAt: "",
-      updatedAt: "",
-    },
-  },
-
   emailAndPassword: {
     enabled: true,
     // optional: password policy, validators
   },
 
   // OAuth providers:
-  oauth: {
+  socialProviders: {
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
@@ -38,5 +32,5 @@ export const auth = betterAuth({
     updateAge: 60 * 60 * 24, // refresh after 1 day use
   },
 
-  plugins: [nextCookies()],
+  plugins: [nextCookies(), oneTap()],
 });

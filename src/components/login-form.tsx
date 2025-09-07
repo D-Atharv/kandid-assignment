@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { authClient } from "@/lib/auth-client";
 
 interface LoginFormProps {
   loading: boolean;
@@ -25,6 +26,13 @@ export function LoginForm({ loading, error, onSubmit }: LoginFormProps) {
     const formData = new FormData(e.currentTarget);
     onSubmit(formData);
   }
+
+  const signInWithGoogle = async () => {
+    await authClient.signIn.social({
+      provider: "google",
+      callbackURL: "/dashboard",
+    });
+  };
 
   return (
     <div className={cn("w-full max-w-sm")}>
@@ -82,6 +90,7 @@ export function LoginForm({ loading, error, onSubmit }: LoginFormProps) {
                 {loading ? "Logging in..." : "Login"}
               </Button>
               <Button
+                onClick={signInWithGoogle}
                 variant="outline"
                 className="w-full"
                 type="button"
