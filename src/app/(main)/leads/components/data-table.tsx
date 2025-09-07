@@ -21,16 +21,20 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+import { Skeleton } from "@/components/ui/skeleton";
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  batchSize?: number; 
+  batchSize?: number;
+  isLoading?: boolean; 
 }
 
 export function LeadsDataTable<TData, TValue>({
   columns,
   data,
   batchSize = 20,
+  isLoading = false, 
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [rowSelection, setRowSelection] = React.useState({});
@@ -39,6 +43,7 @@ export function LeadsDataTable<TData, TValue>({
   const [displayedRows, setDisplayedRows] = React.useState<TData[]>(
     data.slice(0, batchSize)
   );
+  const [loadingMore, setLoadingMore] = React.useState(false);
 
   const table = useReactTable({
     data: displayedRows,
@@ -52,23 +57,30 @@ export function LeadsDataTable<TData, TValue>({
     state: { sorting, rowSelection, globalFilter },
   });
 
-  // scroll handler
   const tableContainerRef = React.useRef<HTMLDivElement>(null);
 
   const handleScroll = () => {
-    if (!tableContainerRef.current) return;
+    if (!tableContainerRef.current || loadingMore || isLoading) return;
 
     const { scrollTop, scrollHeight, clientHeight } = tableContainerRef.current;
 
     if (scrollTop + clientHeight >= scrollHeight - 50) {
-      // near bottom → load more
-      setDisplayedRows((prev) =>
-        prev.length < data.length
-          ? data.slice(0, Math.min(prev.length + batchSize, data.length))
-          : prev
-      );
+      if (displayedRows.length < data.length) {
+        setLoadingMore(true);
+
+        setTimeout(() => {
+          setDisplayedRows((prev) =>
+            data.slice(0, Math.min(prev.length + batchSize, data.length))
+          );
+          setLoadingMore(false);
+        }, 500); 
+      }
     }
   };
+
+  React.useEffect(() => {
+    setDisplayedRows(data.slice(0, batchSize));
+  }, [data, batchSize]);
 
   return (
     <div>
@@ -84,9 +96,9 @@ export function LeadsDataTable<TData, TValue>({
       <div
         ref={tableContainerRef}
         onScroll={handleScroll}
-        className="overflow-auto rounded-xl shadow-lg shadow-gray-400 bg-white max-h-[600px]"
+        className="overflow-y-scroll rounded-xl shadow-lg shadow-gray-400 bg-white max-h-[600px] pr-2"
       >
-        <Table className="min-w-full text-sm md:text-base ">
+        <Table className="min-w-full text-sm md:text-base">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -104,29 +116,42 @@ export function LeadsDataTable<TData, TValue>({
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
+            {isLoading
+              ? Array.from({ length: batchSize }).map((_, i) => (
+                  <TableRow key={`skeleton-${i}`} className="animate-pulse">
+                    {columns.map((_, j) => (
+                      <TableCell key={`skeleton-${i}-${j}`}>
+                        <Skeleton className="h-4 w-full" />
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              : table.getRowModel().rows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+
+            {!isLoading && loadingMore && (
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="h-24 text-center"
+                  className="text-center py-4 text-sm text-muted-foreground"
                 >
-                  No results.
+                  <div className="flex items-center justify-center gap-2">
+                  <div className="w-4 h-4 border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
+                  Loading more...
+                  </div>
                 </TableCell>
               </TableRow>
             )}
