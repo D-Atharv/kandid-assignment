@@ -1,12 +1,18 @@
-// app/(auth)/register/page.tsx
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { register } from "./actions";
 import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { register } from "./actions";
 import { ArrowLeft, Eye, EyeOff } from "lucide-react";
 
 export default function RegisterPage() {
@@ -25,109 +31,98 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50">
-      <Card className="w-[400px]">
-        <CardHeader>
-          {/* Back navigation */}
-          <Button
-            variant="ghost"
-            size="sm"
-            className="flex items-center gap-2 text-gray-600"
-            asChild
+    <div className="flex min-h-screen w-full items-center justify-center bg-gray-100 p-4 ">
+      <Card className="w-full max-w-sm p-6">
+        <CardHeader className="pt-6 pb-4 px-6">
+          <Link
+            href="/login"
+            className="flex w-fit items-center gap-2 text-sm text-gray-600 hover:text-gray-900 mb-4" 
           >
-            <a href="/login">
-              <ArrowLeft className="h-4 w-4" /> Back
-            </a>
-          </Button>
-          <CardTitle className="text-2xl font-semibold text-center">
+            <ArrowLeft className="h-4 w-4 " />
+            Back
+          </Link>
+          <CardTitle className="text-2xl font-bold">
             Register with email
           </CardTitle>
+          <CardDescription className="mt-1">
+            Register using your email address.
+          </CardDescription>
         </CardHeader>
 
-        <CardContent>
-          <form action={handleRegister} className="flex flex-col space-y-4">
-            {/* First Name */}
-            <div className="space-y-2">
-              <Label htmlFor="firstName">First Name</Label>
-              <Input
-                id="firstName"
-                name="firstName"
-                type="text"
-                placeholder="John"
-                required
-              />
+        <CardContent className="px-6 pb-6">
+          <form action={handleRegister} className="space-y-5">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="firstName">First Name</Label>
+                <Input
+                  id="firstName"
+                  name="firstName"
+                  type="text"
+                  placeholder="First Name"
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="lastName">Last Name</Label>
+                <Input
+                  id="lastName"
+                  name="lastName"
+                  type="text"
+                  placeholder="Last Name"
+                  required
+                />
+              </div>
             </div>
-
-            {/* Last Name */}
-            <div className="space-y-2">
-              <Label htmlFor="lastName">Last Name</Label>
-              <Input
-                id="lastName"
-                name="lastName"
-                type="text"
-                placeholder="Doe"
-                required
-              />
-            </div>
-
-            {/* Email */}
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
                 name="email"
                 type="email"
-                placeholder="m@example.com"
+                placeholder="Enter your email"
                 required
               />
             </div>
-
-            {/* Password with toggle */}
-            <div className="space-y-2 relative">
+            <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
               <div className="relative">
                 <Input
                   id="password"
                   name="password"
                   type={showPassword ? "text" : "password"}
-                  placeholder="••••••••"
+                  placeholder="Enter your password"
                   required
-                  className="pr-10"
+                  className="pr-10" 
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-2 flex items-center text-gray-500 hover:text-gray-700"
+                  className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700"
                   tabIndex={-1}
                 >
                   {showPassword ? (
-                    <EyeOff className="h-4 w-4" />
+                    <EyeOff className="h-5 w-5" />
                   ) : (
-                    <Eye className="h-4 w-4" />
+                    <Eye className="h-5 w-5" />
                   )}
                 </button>
               </div>
             </div>
-
-            {/* Error message */}
-            {error && <p className="text-red-500 text-sm">{error}</p>}
-
-            {/* Submit button */}
-            <Button type="submit" disabled={loading} className="w-full">
+            {error && <p className="text-sm text-red-600">{error}</p>}
+            <Button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-blue-600 hover:bg-blue-700 mt-5 rounded-3xl"
+            >
               {loading ? "Creating account..." : "Create my account"}
             </Button>
-
-            {/* Alternative flow */}
-            <p className="text-center text-sm text-gray-600">
-              Already have an account?{" "}
-              <a
-                href="/login"
-                className="text-blue-600 underline underline-offset-4"
-              >
-                Login
-              </a>
-            </p>
           </form>
+          <p className="mt-6 text-center text-sm text-gray-600">
+            Already have an account?{" "}
+            <Link href="/login" className="text-blue-600 hover:underline">
+              Login
+            </Link>
+          </p>
         </CardContent>
       </Card>
     </div>

@@ -1,4 +1,3 @@
-// components/LoginForm.tsx
 "use client";
 
 import { cn } from "@/lib/utils";
@@ -86,13 +85,17 @@ export function LoginForm({ loading, error, onSubmit }: LoginFormProps) {
             )}
 
             <div className="space-y-3">
-              <Button type="submit" className="w-full" disabled={loading}>
+              <Button
+                type="submit"
+                className="w-full bg-blue-800 rounded-full"
+                disabled={loading}
+              >
                 {loading ? "Logging in..." : "Login"}
               </Button>
               <Button
                 onClick={signInWithGoogle}
                 variant="outline"
-                className="w-full"
+                className="w-full rounded-full"
                 type="button"
                 disabled={loading}
               >
