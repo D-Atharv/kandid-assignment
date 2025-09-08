@@ -97,7 +97,7 @@ export function LeadsDataTable<
       <div
         ref={tableContainerRef}
         onScroll={handleScroll}
-        className="overflow-y-scroll rounded-xl shadow-lg shadow-gray-400 bg-white max-h-[600px] pr-2"
+        className="overflow-y-scroll rounded-xl shadow-lg shadow-gray-400 bg-white max-h-[590px] pr-2"
       >
         <Table className="min-w-full text-sm md:text-base">
           <TableHeader>

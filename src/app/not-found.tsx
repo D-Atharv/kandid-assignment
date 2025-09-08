@@ -6,9 +6,16 @@ import { useRouter } from "next/navigation";
 import { Rocket } from "lucide-react";
 import Link from "next/link";
 
+interface Star {
+  top: string;
+  left: string;
+  delay: string;
+}
+
 export default function NotFoundPage() {
   const router = useRouter();
   const [offset, setOffset] = useState(0);
+  const [stars, setStars] = useState<Star[]>([]);
 
   useEffect(() => {
     let direction = 1;
@@ -19,8 +26,16 @@ export default function NotFoundPage() {
         return prev + direction;
       });
     }, 50);
-
     return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const generatedStars: Star[] = Array.from({ length: 8 }).map(() => ({
+      top: `${Math.random() * 100}%`,
+      left: `${Math.random() * 100}%`,
+      delay: `${Math.random() * 4}s`,
+    }));
+    setStars(generatedStars);
   }, []);
 
   return (
@@ -35,7 +50,7 @@ export default function NotFoundPage() {
             404
           </h1>
           <p className="text-lg text-gray-300 mt-2">
-            Sorry, the page you’re looking for doesn’t exist.
+            Sorry, the page you&apos;re looking for doesn&apos;t exist.
           </p>
 
           <div className="my-6 flex justify-center">
@@ -58,21 +73,21 @@ export default function NotFoundPage() {
             Meanwhile, you can check our{" "}
             <Link href="/login" className="text-purple-500 underline">
               homepage
-            </Link>
+            </Link>{" "}
             or explore other sections.
           </p>
         </div>
       </div>
 
       <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
-        {[...Array(6)].map((_, i) => (
+        {stars.map((star, i) => (
           <div
             key={i}
             className="absolute h-0.5 w-20 bg-white/30 rounded-full animate-[shooting_4s_linear_infinite]"
             style={{
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 4}s`,
+              top: star.top,
+              left: star.left,
+              animationDelay: star.delay,
             }}
           ></div>
         ))}
