@@ -27,45 +27,34 @@ import { LeadProfileSheet } from "./profile-sheet";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  batchSize?: number;
   isLoading?: boolean;
-}
-
-interface TimelineEvent {
-  title: string;
-  time?: string;
-  status: "completed" | "pending" | "rejected";
+  fetchNextPage?: () => void;
+  hasNextPage?: boolean;
+  isFetchingNextPage?: boolean;
+  onUpdateStatus: (leadId: string | number, newStatus: string) => void;
 }
 
 export function LeadsDataTable<
-  TData extends {
-    id: string | number;
-    name: string;
-    email?: string;
-    phone?: string;
-    timeline?: TimelineEvent[];
-  },
+  TData extends { id: string | number; name: string; status?: string },
   TValue,
 >({
   columns,
   data,
-  batchSize = 20,
   isLoading = false,
+  fetchNextPage,
+  hasNextPage,
+  isFetchingNextPage,
+  onUpdateStatus,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [rowSelection, setRowSelection] = React.useState({});
   const [globalFilter, setGlobalFilter] = React.useState<string>("");
 
-  const [displayedRows, setDisplayedRows] = React.useState<TData[]>(
-    data.slice(0, batchSize)
-  );
-  const [loadingMore, setLoadingMore] = React.useState(false);
-
   const [sheetOpen, setSheetOpen] = React.useState(false);
   const [selectedLead, setSelectedLead] = React.useState<TData | null>(null);
 
   const table = useReactTable({
-    data: displayedRows,
+    data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     onSortingChange: setSorting,
@@ -84,25 +73,15 @@ export function LeadsDataTable<
   };
 
   const handleScroll = () => {
-    if (!tableContainerRef.current || loadingMore || isLoading) return;
+    if (!tableContainerRef.current || isLoading || isFetchingNextPage) return;
     const { scrollTop, scrollHeight, clientHeight } = tableContainerRef.current;
 
     if (scrollTop + clientHeight >= scrollHeight - 50) {
-      if (displayedRows.length < data.length) {
-        setLoadingMore(true);
-        setTimeout(() => {
-          setDisplayedRows((prev) =>
-            data.slice(0, Math.min(prev.length + batchSize, data.length))
-          );
-          setLoadingMore(false);
-        }, 500);
+      if (hasNextPage && fetchNextPage) {
+        fetchNextPage();
       }
     }
   };
-
-  React.useEffect(() => {
-    setDisplayedRows(data.slice(0, batchSize));
-  }, [data, batchSize]);
 
   return (
     <div>
@@ -139,9 +118,8 @@ export function LeadsDataTable<
           </TableHeader>
 
           <TableBody>
-            {/* Skeleton */}
             {isLoading
-              ? Array.from({ length: batchSize }).map((_, i) => (
+              ? Array.from({ length: 10 }).map((_, i) => (
                   <TableRow key={`skeleton-${i}`} className="animate-pulse">
                     {columns.map((_, j) => (
                       <TableCell key={`skeleton-${i}-${j}`}>
@@ -168,8 +146,7 @@ export function LeadsDataTable<
                   </TableRow>
                 ))}
 
-            {/* Loading more */}
-            {!isLoading && loadingMore && (
+            {isFetchingNextPage && (
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
@@ -187,17 +164,7 @@ export function LeadsDataTable<
         open={sheetOpen}
         onOpenChange={setSheetOpen}
         selectedLead={selectedLead}
-        onUpdateStatus={(leadId, newStatus) => {
-          setSelectedLead((prev) =>
-            prev && prev.id === leadId ? { ...prev, status: newStatus } : prev
-          );
-
-          setDisplayedRows((prevRows) =>
-            prevRows.map((row) =>
-              row.id === leadId ? { ...row, status: newStatus } : row
-            )
-          );
-        }}
+        onUpdateStatus={onUpdateStatus} 
       />
     </div>
   );

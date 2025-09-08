@@ -94,7 +94,7 @@ export const columns: ColumnDef<Lead>[] = [
     ),
     cell: ({ row }) => {
       const date = row.original.lastContactDate;
-      return <span>{date.toLocaleDateString()}</span>;
+      return <span>{new Date(date).toLocaleDateString()}</span>;
     },
   },
 ];
