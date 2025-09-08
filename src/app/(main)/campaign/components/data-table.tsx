@@ -1,5 +1,4 @@
 "use client";
-
 import * as React from "react";
 import {
   ColumnDef,
@@ -20,91 +19,84 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
 import { Skeleton } from "@/components/ui/skeleton";
-import { LeadProfileSheet } from "./profile-sheet";
+import { Campaign } from "@/lib/data";
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
+interface Props<TValue> {
+  columns: ColumnDef<Campaign, TValue>[];
+  data: Campaign[];
   isLoading?: boolean;
   fetchNextPage?: () => void;
   hasNextPage?: boolean;
   isFetchingNextPage?: boolean;
-  onUpdateStatus: (leadId: string | number, newStatus: string) => void;
+  onUpdateStatus?: (
+    campaignId: string,
+    newStatus: "Active" | "Inactive"
+  ) => void;
 }
 
-export function LeadsDataTable<
-  TData extends { id: string | number; name: string; status?: string },
-  TValue,
->({
+export function CampaignsDataTable<TValue>({
   columns,
   data,
   isLoading = false,
   fetchNextPage,
   hasNextPage,
   isFetchingNextPage,
-  onUpdateStatus,
-}: DataTableProps<TData, TValue>) {
+}: Props<TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [rowSelection, setRowSelection] = React.useState({});
-  const [globalFilter, setGlobalFilter] = React.useState<string>("");
+  const [globalFilter, setGlobalFilter] = React.useState("");
 
-  const [sheetOpen, setSheetOpen] = React.useState(false);
-  const [selectedLead, setSelectedLead] = React.useState<TData | null>(null);
+  React.useState<Campaign | null>(null);
 
   const table = useReactTable({
     data,
     columns,
-    getCoreRowModel: getCoreRowModel(),
+    state: { sorting, rowSelection, globalFilter },
     onSortingChange: setSorting,
-    getSortedRowModel: getSortedRowModel(),
     onRowSelectionChange: setRowSelection,
     onGlobalFilterChange: setGlobalFilter,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    state: { sorting, rowSelection, globalFilter },
   });
 
-  const tableContainerRef = React.useRef<HTMLDivElement>(null);
-
-  const openSheet = (lead: TData) => {
-    setSelectedLead(lead);
-    setSheetOpen(true);
-  };
+  const ref = React.useRef<HTMLDivElement | null>(null);
 
   const handleScroll = () => {
-    if (!tableContainerRef.current || isLoading || isFetchingNextPage) return;
-    const { scrollTop, scrollHeight, clientHeight } = tableContainerRef.current;
-
-    if (scrollTop + clientHeight >= scrollHeight - 50) {
-      if (hasNextPage && fetchNextPage) {
-        fetchNextPage();
-      }
+    if (!ref.current) return;
+    if (isLoading || isFetchingNextPage) return;
+    const { scrollTop, scrollHeight, clientHeight } = ref.current;
+    if (scrollTop + clientHeight >= scrollHeight - 60) {
+      if (hasNextPage && fetchNextPage) fetchNextPage();
     }
   };
 
   return (
     <div>
-      <div className="flex items-center py-4">
+      <div className="flex items-center justify-between py-4">
         <Input
-          placeholder="Search all columns..."
-          value={globalFilter ?? ""}
+          placeholder="Search campaigns..."
+          value={globalFilter}
           onChange={(e) => setGlobalFilter(e.target.value)}
           className="max-w-sm"
         />
       </div>
 
       <div
-        ref={tableContainerRef}
+        ref={ref}
         onScroll={handleScroll}
-        className="overflow-y-scroll rounded-xl shadow-lg shadow-gray-400 bg-white max-h-[600px] pr-2"
+        className="overflow-y-auto rounded-xl shadow-lg bg-white max-h-[520px] pr-2"
       >
         <Table className="min-w-full text-sm md:text-base">
           <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
+            {table.getHeaderGroups().map((hg) => (
+              <TableRow key={hg.id}>
+                {hg.headers.map((header) => (
+                  <TableHead
+                    key={header.id}
+                    className="sticky top-0 bg-white z-10"
+                  >
                     {header.isPlaceholder
                       ? null
                       : flexRender(
@@ -119,10 +111,10 @@ export function LeadsDataTable<
 
           <TableBody>
             {isLoading
-              ? Array.from({ length: 10 }).map((_, i) => (
-                  <TableRow key={`skeleton-${i}`} className="animate-pulse">
+              ? Array.from({ length: 8 }).map((_, i) => (
+                  <TableRow key={`s-${i}`} className="animate-pulse">
                     {columns.map((_, j) => (
-                      <TableCell key={`skeleton-${i}-${j}`}>
+                      <TableCell key={j}>
                         <Skeleton className="h-10 w-full" />
                       </TableCell>
                     ))}
@@ -131,9 +123,7 @@ export function LeadsDataTable<
               : table.getRowModel().rows.map((row) => (
                   <TableRow
                     key={row.id}
-                    data-state={row.getIsSelected() && "selected"}
                     className="cursor-pointer hover:bg-gray-50"
-                    onClick={() => openSheet(row.original)}
                   >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id}>
@@ -159,13 +149,6 @@ export function LeadsDataTable<
           </TableBody>
         </Table>
       </div>
-
-      <LeadProfileSheet
-        open={sheetOpen}
-        onOpenChange={setSheetOpen}
-        selectedLead={selectedLead}
-        onUpdateStatus={onUpdateStatus}
-      />
     </div>
   );
 }
