@@ -6,15 +6,21 @@ import { session } from "../../../../db/schema";
 import { eq } from "drizzle-orm";
 
 export async function logout() {
-  const token = (await cookies()).get("session")?.value;
+  const cookieStore = await cookies();
 
-  if (token) {
-    // Delete the session from DB
-    await db.delete(session).where(eq(session.token, token));
-    // Delete the session cookie
-    (await cookies()).delete("session");
+  // Manual session
+  const manualToken = cookieStore.get("session")?.value;
+  if (manualToken) {
+    await db.delete(session).where(eq(session.token, manualToken));
+    cookieStore.delete("session");
   }
 
-  // Optionally return a success object
+  // Better Auth session
+  const betterAuthToken = cookieStore.get("better-auth.session_token")?.value;
+  if (betterAuthToken) {
+    // Better Auth manages DB itself, just clear cookie
+    cookieStore.delete("better-auth.session_token");
+  }
+
   return { success: true };
 }
