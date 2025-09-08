@@ -22,19 +22,35 @@ import {
 } from "@/components/ui/table";
 
 import { Skeleton } from "@/components/ui/skeleton";
+import { LeadProfileSheet } from "./profile-sheet";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   batchSize?: number;
-  isLoading?: boolean; 
+  isLoading?: boolean;
 }
 
-export function LeadsDataTable<TData, TValue>({
+interface TimelineEvent {
+  title: string;
+  time?: string;
+  status: "completed" | "pending" | "rejected";
+}
+
+export function LeadsDataTable<
+  TData extends {
+    id: string | number;
+    name: string;
+    email?: string;
+    phone?: string;
+    timeline?: TimelineEvent[];
+  },
+  TValue,
+>({
   columns,
   data,
   batchSize = 20,
-  isLoading = false, 
+  isLoading = false,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [rowSelection, setRowSelection] = React.useState({});
@@ -44,6 +60,9 @@ export function LeadsDataTable<TData, TValue>({
     data.slice(0, batchSize)
   );
   const [loadingMore, setLoadingMore] = React.useState(false);
+
+  const [sheetOpen, setSheetOpen] = React.useState(false);
+  const [selectedLead, setSelectedLead] = React.useState<TData | null>(null);
 
   const table = useReactTable({
     data: displayedRows,
@@ -59,21 +78,24 @@ export function LeadsDataTable<TData, TValue>({
 
   const tableContainerRef = React.useRef<HTMLDivElement>(null);
 
+  const openSheet = (lead: TData) => {
+    setSelectedLead(lead);
+    setSheetOpen(true);
+  };
+
   const handleScroll = () => {
     if (!tableContainerRef.current || loadingMore || isLoading) return;
-
     const { scrollTop, scrollHeight, clientHeight } = tableContainerRef.current;
 
     if (scrollTop + clientHeight >= scrollHeight - 50) {
       if (displayedRows.length < data.length) {
         setLoadingMore(true);
-
         setTimeout(() => {
           setDisplayedRows((prev) =>
             data.slice(0, Math.min(prev.length + batchSize, data.length))
           );
           setLoadingMore(false);
-        }, 500); 
+        }, 500);
       }
     }
   };
@@ -88,7 +110,7 @@ export function LeadsDataTable<TData, TValue>({
         <Input
           placeholder="Search all columns..."
           value={globalFilter ?? ""}
-          onChange={(event) => setGlobalFilter(event.target.value)}
+          onChange={(e) => setGlobalFilter(e.target.value)}
           className="max-w-sm"
         />
       </div>
@@ -115,7 +137,9 @@ export function LeadsDataTable<TData, TValue>({
               </TableRow>
             ))}
           </TableHeader>
+
           <TableBody>
+            {/* Skeleton */}
             {isLoading
               ? Array.from({ length: batchSize }).map((_, i) => (
                   <TableRow key={`skeleton-${i}`} className="animate-pulse">
@@ -130,6 +154,8 @@ export function LeadsDataTable<TData, TValue>({
                   <TableRow
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
+                    className="cursor-pointer hover:bg-gray-50"
+                    onClick={() => openSheet(row.original)}
                   >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id}>
@@ -142,22 +168,37 @@ export function LeadsDataTable<TData, TValue>({
                   </TableRow>
                 ))}
 
+            {/* Loading more */}
             {!isLoading && loadingMore && (
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
                   className="text-center py-4 text-sm text-muted-foreground"
                 >
-                  <div className="flex items-center justify-center gap-2">
-                  <div className="w-4 h-4 border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
                   Loading more...
-                  </div>
                 </TableCell>
               </TableRow>
             )}
           </TableBody>
         </Table>
       </div>
+
+      <LeadProfileSheet
+        open={sheetOpen}
+        onOpenChange={setSheetOpen}
+        selectedLead={selectedLead}
+        onUpdateStatus={(leadId, newStatus) => {
+          setSelectedLead((prev) =>
+            prev && prev.id === leadId ? { ...prev, status: newStatus } : prev
+          );
+
+          setDisplayedRows((prevRows) =>
+            prevRows.map((row) =>
+              row.id === leadId ? { ...row, status: newStatus } : row
+            )
+          );
+        }}
+      />
     </div>
   );
 }
