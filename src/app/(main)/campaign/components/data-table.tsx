@@ -2,7 +2,6 @@
 import * as React from "react";
 import {
   ColumnDef,
-  SortingState,
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
@@ -21,6 +20,7 @@ import {
 } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Campaign } from "@/lib/data";
+import { useCampaignTableStore } from "@/app/store/use-campaign-store";
 
 interface Props<TValue> {
   columns: ColumnDef<Campaign, TValue>[];
@@ -43,9 +43,14 @@ export function CampaignsDataTable<TValue>({
   hasNextPage,
   isFetchingNextPage,
 }: Props<TValue>) {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [rowSelection, setRowSelection] = React.useState({});
-  const [globalFilter, setGlobalFilter] = React.useState("");
+    const {
+      sorting,
+      setSorting,
+      rowSelection,
+      setRowSelection,
+      globalFilter,
+      setGlobalFilter,
+    } = useCampaignTableStore();
 
   React.useState<Campaign | null>(null);
 

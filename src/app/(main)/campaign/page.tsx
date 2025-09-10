@@ -11,6 +11,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { columns } from "./components/columns";
 import { CampaignsDataTable } from "./components/data-table";
 import { Plus } from "lucide-react";
+import { useCampaignPageStore } from "@/app/store/use-campaign-store";
 
 type PageResp = { campaigns: Campaign[]; nextPage: number | null };
 
@@ -41,7 +42,7 @@ async function updateCampaignStatus({
 
 export default function CampaignsPage() {
   const qc = useQueryClient();
-  const [filter, setFilter] = React.useState<CampaignFilter>("all");
+  const { filter, setFilter } = useCampaignPageStore();
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useInfiniteQuery({

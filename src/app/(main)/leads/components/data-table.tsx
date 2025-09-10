@@ -3,7 +3,6 @@
 import * as React from "react";
 import {
   ColumnDef,
-  SortingState,
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
@@ -23,6 +22,7 @@ import {
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { LeadProfileSheet } from "./profile-sheet";
+import { useLeadsStore } from "@/app/store/use-leads-store";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -46,12 +46,18 @@ export function LeadsDataTable<
   isFetchingNextPage,
   onUpdateStatus,
 }: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [rowSelection, setRowSelection] = React.useState({});
-  const [globalFilter, setGlobalFilter] = React.useState<string>("");
-
-  const [sheetOpen, setSheetOpen] = React.useState(false);
-  const [selectedLead, setSelectedLead] = React.useState<TData | null>(null);
+  const {
+    sorting,
+    setSorting,
+    rowSelection,
+    setRowSelection,
+    globalFilter,
+    setGlobalFilter,
+    sheetOpen,
+    setSheetOpen,
+    selectedLead,
+    setSelectedLead,
+  } = useLeadsStore();
 
   const table = useReactTable({
     data,

@@ -23,6 +23,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useLeadsStore } from "@/app/store/use-leads-store";
 
 interface TimelineEvent {
   title: string;
@@ -83,7 +84,7 @@ export function LeadProfileSheet({
   selectedLead,
   onUpdateStatus,
 }: LeadProfileSheetProps) {
-  const [newStatus, setNewStatus] = React.useState<string>("");
+  const { newStatus, setNewStatus } = useLeadsStore();
 
   if (!selectedLead) return null;
 
@@ -92,7 +93,7 @@ export function LeadProfileSheet({
 
   const handleStatusChange = (status: string) => {
     setNewStatus(status);
-    onUpdateStatus(selectedLead.id, status); 
+    onUpdateStatus(selectedLead.id, status);
   };
 
   return (
