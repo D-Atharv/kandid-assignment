@@ -4,6 +4,18 @@ interface ActivityIndicatorProps {
   level: number; 
 }
 
+/**
+ * Renders an activity indicator with four vertical bars, each representing a level of activity.
+ * The color of the active bars changes based on the current `level` prop:
+ * - Levels 1 and 2: yellow
+ * - Level 3: purple
+ * - Level 4: blue
+ * - Inactive bars: gray
+ *
+ * @param {ActivityIndicatorProps} props - The props for the ActivityIndicator component.
+ * @param {number} props.level - The current activity level (1-4) to display.
+ * @returns {JSX.Element} The rendered activity indicator.
+ */
 export function ActivityIndicator({ level }: ActivityIndicatorProps) {
   const activeColor =
     level <= 2

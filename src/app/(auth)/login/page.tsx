@@ -5,6 +5,17 @@ import { useState } from "react";
 import { LoginForm } from "@/components/login-form";
 import { login } from "./actions";
 
+/**
+ * LoginPage component renders the login form and manages its state.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered login page.
+ *
+ * @remarks
+ * - Uses React state to manage loading and error messages.
+ * - Handles form submission asynchronously via `handleLogin`.
+ * - Displays the `LoginForm` component with loading and error props.
+ */
 export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

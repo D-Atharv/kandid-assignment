@@ -78,6 +78,29 @@ export type Lead = {
     content?: string;
   }>;
 };
+/**
+ * Mock data representing a list of enriched lead objects for testing or development purposes.
+ *
+ * Each lead contains detailed information including:
+ * - Personal and professional details (name, title, email, company)
+ * - Campaign and activity metadata
+ * - Status and last contact information
+ * - Author and sender details
+ * - Timeline of interactions, with status and content for each step
+ *
+ * This mock dataset is useful for simulating CRM, outreach, or sales pipeline scenarios.
+ *
+ * @remarks
+ * The structure assumes the existence of a `Lead` type/interface describing the shape of each lead object.
+ *
+ * @example
+ * ```typescript
+ * import { mockLeads } from './data';
+ * 
+ * // Access the first lead's name
+ * const firstLeadName = mockLeads[0].name;
+ * ```
+ */
 export const mockLeads: Lead[] = [
   {
     id: "1",

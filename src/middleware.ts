@@ -3,6 +3,17 @@ import type { NextRequest } from "next/server";
 
 const publicRoutes = ["/", "/login", "/register"];
 
+/**
+ * Middleware function to handle authentication for incoming requests.
+ *
+ * - Allows access to public routes defined in `publicRoutes`.
+ * - Checks for authentication tokens in cookies: "session" or "better-auth.session_token".
+ * - Redirects unauthenticated users to the "/login" page.
+ * - Allows authenticated users to proceed.
+ *
+ * @param req - The incoming Next.js request object.
+ * @returns A NextResponse object that either continues the request or redirects to login.
+ */
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 

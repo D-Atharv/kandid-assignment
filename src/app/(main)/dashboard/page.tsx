@@ -2,6 +2,13 @@
 
 import LogOut from "../../(auth)/logout/logout";
 
+/**
+ * Renders the main dashboard page.
+ *
+ * Displays a heading and a logout button component.
+ *
+ * @returns {JSX.Element} The dashboard page layout.
+ */
 export default function Dashboard() {
   return (
     <div className="p-8">

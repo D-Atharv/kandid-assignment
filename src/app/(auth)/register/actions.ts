@@ -8,6 +8,19 @@ import { db } from "../../../../db/drizzle_client";
 import { users } from "../../../../db/schema";
 import { redirect } from "next/navigation";
 
+/**
+ * Registers a new user with the provided form data.
+ *
+ * This function performs the following steps:
+ * 1. Extracts user details (first name, last name, email, password) from the form data.
+ * 2. Checks if a user with the given email already exists in the database.
+ * 3. Hashes the user's password using bcrypt.
+ * 4. Creates a new user record in the database.
+ * 5. Redirects the user to the login page upon successful registration.
+ *
+ * @param formData - The form data containing user registration details.
+ * @returns An object indicating either an error (if the user already exists) or success.
+ */
 export async function register(formData: FormData) {
   const firstName = formData.get("firstName") as string;
   const lastName = formData.get("lastName") as string;

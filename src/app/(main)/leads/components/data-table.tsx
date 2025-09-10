@@ -34,6 +34,28 @@ interface DataTableProps<TData, TValue> {
   onUpdateStatus: (leadId: string | number, newStatus: string) => void;
 }
 
+/**
+ * Renders a data table for displaying leads with sorting, filtering, row selection, and infinite scrolling capabilities.
+ *
+ * @template TData - The type of data for each row, must include `id`, `name`, and optionally `status`.
+ * @template TValue - The type of value for table columns.
+ *
+ * @param props.columns - Array of column definitions for the table.
+ * @param props.data - Array of lead data to display in the table.
+ * @param props.isLoading - Indicates if the initial data is loading.
+ * @param props.fetchNextPage - Function to fetch the next page of data for infinite scrolling.
+ * @param props.hasNextPage - Indicates if there are more pages to fetch.
+ * @param props.isFetchingNextPage - Indicates if the next page is currently being fetched.
+ * @param props.onUpdateStatus - Callback to update the status of a lead.
+ *
+ * @returns A React component that displays a searchable, sortable, and infinitely scrollable table of leads.
+ *
+ * @remarks
+ * - Uses `useLeadsStore` for state management (sorting, selection, filtering, sheet state).
+ * - Integrates with `useReactTable` for table logic.
+ * - Displays a skeleton loader while loading.
+ * - Opens a lead profile sheet when a row is clicked.
+ */
 export function LeadsDataTable<
   TData extends { id: string | number; name: string; status?: string },
   TValue,

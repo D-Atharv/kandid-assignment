@@ -9,6 +9,19 @@ import { cookies } from "next/headers";
 import { randomUUID } from "crypto";
 import { redirect } from "next/navigation";
 
+/**
+ * Handles user login by validating credentials, creating a session, and setting a session cookie.
+ *
+ * @param formData - The form data containing the user's email and password.
+ * @returns An object with an error message if authentication fails, otherwise redirects to the dashboard.
+ *
+ * @remarks
+ * - Finds the user by email.
+ * - Verifies the password using bcrypt.
+ * - Creates a new session in the database if authentication succeeds.
+ * - Sets a secure, HTTP-only cookie with the session token.
+ * - Redirects the user to the dashboard upon successful login.
+ */
 export async function login(formData: FormData) {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;

@@ -15,6 +15,18 @@ import {
 import { register } from "./actions";
 import { ArrowLeft, Eye, EyeOff } from "lucide-react";
 
+/**
+ * Renders the registration page for new users to create an account using their email address.
+ *
+ * Features:
+ * - Displays a registration form with fields for first name, last name, email, and password.
+ * - Allows toggling password visibility.
+ * - Handles form submission asynchronously, showing loading state and error messages.
+ * - Provides navigation links to the login page.
+ *
+ * @component
+ * @returns {JSX.Element} The registration page UI.
+ */
 export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

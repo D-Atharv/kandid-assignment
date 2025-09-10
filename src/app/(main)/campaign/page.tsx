@@ -40,6 +40,17 @@ async function updateCampaignStatus({
   return res.json();
 }
 
+/**
+ * Renders the Campaigns page, allowing users to view, filter, and manage campaigns.
+ *
+ * Features:
+ * - Fetches campaigns data using infinite scrolling with React Query.
+ * - Supports optimistic updates for campaign status changes.
+ * - Provides filtering by campaign status (all, active, inactive).
+ * - Displays a table of campaigns and a header with actions.
+ *
+ * @returns {JSX.Element} The Campaigns page component.
+ */
 export default function CampaignsPage() {
   const qc = useQueryClient();
   const { filter, setFilter } = useCampaignPageStore();

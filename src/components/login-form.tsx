@@ -19,6 +19,18 @@ interface LoginFormProps {
   onSubmit: (formData: FormData) => void;
 }
 
+/**
+ * Renders a login form with email and password fields, error display, and options for standard login or Google social login.
+ *
+ * @param loading - Indicates whether the login process is ongoing and disables form inputs and buttons.
+ * @param error - Optional error message to display when login fails.
+ * @param onSubmit - Callback function invoked with the form data when the user submits the login form.
+ *
+ * @remarks
+ * - Includes a "Forgot your password?" link and a "Sign up" link for user navigation.
+ * - The Google login button triggers social authentication via the `authClient`.
+ * - Uses custom UI components for styling and layout.
+ */
 export function LoginForm({ loading, error, onSubmit }: LoginFormProps) {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();

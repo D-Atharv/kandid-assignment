@@ -2,6 +2,16 @@
 import { NextResponse } from "next/server";
 import { mockCampaigns } from "@/lib/data";
 
+/**
+ * Handles GET requests for paginated campaigns.
+ *
+ * Extracts `page` and `limit` query parameters from the request URL to determine
+ * the slice of campaigns to return. Returns a JSON response containing the current
+ * page of campaigns and the next page number if more campaigns are available.
+ *
+ * @param request - The incoming HTTP request object.
+ * @returns A JSON response with the paginated campaigns and the next page number.
+ */
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const pageParam = Number(url.searchParams.get("page") ?? "0");

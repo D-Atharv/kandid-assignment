@@ -17,6 +17,21 @@ interface DataTableColumnHeaderProps<TData, TValue>
   title: string;
 }
 
+/**
+ * Renders a column header for a data table with optional sorting functionality.
+ *
+ * If the column is sortable, displays a dropdown menu allowing the user to sort
+ * the column in ascending or descending order. The current sort state is indicated
+ * by an icon. If the column is not sortable, only the title is displayed.
+ *
+ * @template TData - The type of the data for the table rows.
+ * @template TValue - The type of the value for the column.
+ * @param props - The props for the column header component.
+ * @param props.column - The column instance, providing sorting capabilities.
+ * @param props.title - The display title for the column header.
+ * @param props.className - Optional additional class names for styling.
+ * @returns The rendered column header component.
+ */
 export function DataTableColumnHeader<TData, TValue>({
   column,
   title,

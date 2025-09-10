@@ -16,6 +16,15 @@ import { ChevronRight, Home } from "lucide-react";
 // Function to capitalize the first letter of a string
 const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
+/**
+ * Renders a breadcrumb navigation component based on the current pathname.
+ * 
+ * The breadcrumbs start with a home icon linking to the dashboard, followed by
+ * segments of the current path. Each segment is displayed as a link except for
+ * the last segment, which is shown as the current page.
+ * 
+ * @returns {JSX.Element} The breadcrumb navigation component.
+ */
 export function Breadcrumbs() {
   const pathname = usePathname();
   const pathSegments = pathname.split("/").filter((segment) => segment);

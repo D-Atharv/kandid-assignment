@@ -1,3 +1,18 @@
+/**
+ * Renders a column header for a data table with sorting functionality.
+ *
+ * Displays the column title and a button to toggle sorting (ascending/descending).
+ * If the column is sortable, a dropdown menu allows the user to select the sort direction.
+ * If the column is not sortable, only the title is displayed.
+ *
+ * @template TData - The type of the row data.
+ * @template TValue - The type of the column value.
+ * @param {Props<TData, TValue>} props - The component props.
+ * @param {Column<TData, TValue>} props.column - The table column instance from TanStack Table.
+ * @param {string} props.title - The display title of the column.
+ * @param {string} [props.className] - Optional additional CSS classes for the header container.
+ * @returns {JSX.Element} The rendered column header component.
+ */
 "use client";
 import * as React from "react";
 import { ArrowDownIcon, ArrowUpIcon, ChevronsUpDownIcon } from "lucide-react";

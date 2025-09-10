@@ -35,6 +35,19 @@ interface Props<TValue> {
   ) => void;
 }
 
+/**
+ * Renders a data table for campaigns with sorting, filtering, row selection, and infinite scroll capabilities.
+ *
+ * @template TValue - The type of data for each row in the table.
+ * @param props - The props for the CampaignsDataTable component.
+ * @param props.columns - The column definitions for the table.
+ * @param props.data - The array of data to display in the table.
+ * @param props.isLoading - Indicates if the initial data is loading.
+ * @param props.fetchNextPage - Function to fetch the next page of data for infinite scrolling.
+ * @param props.hasNextPage - Indicates if there are more pages to fetch.
+ * @param props.isFetchingNextPage - Indicates if the next page is currently being fetched.
+ * @returns The rendered campaigns data table component.
+ */
 export function CampaignsDataTable<TValue>({
   columns,
   data,

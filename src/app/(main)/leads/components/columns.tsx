@@ -8,6 +8,24 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { DataTableColumnHeader } from "./data-table-column-header";
 import { ActivityIndicator } from "./activity-indicator";
 
+/**
+ * Column definitions for the Leads data table.
+ *
+ * Each column specifies how to render its header and cell, as well as configuration options such as sorting.
+ * 
+ * Columns:
+ * - "select": Checkbox for selecting all rows or individual rows.
+ * - "name": Displays lead's avatar, name, and title.
+ * - "email": Displays lead's email address.
+ * - "company": Displays lead's company name.
+ * - "campaignName": Displays the campaign name associated with the lead.
+ * - "activity": Shows an activity indicator based on the lead's activity level.
+ * - "status": Displays the lead's status with a styled badge and icon.
+ * - "lastContactDate": Shows the date of last contact, formatted as a locale date string.
+ *
+ * @see Lead
+ * @see ColumnDef
+ */
 export const columns: ColumnDef<Lead>[] = [
   {
     id: "select",

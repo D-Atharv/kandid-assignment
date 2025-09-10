@@ -1,3 +1,19 @@
+/**
+ * Column definitions for the Campaign data table.
+ *
+ * Each column specifies how to access and render data for a Campaign object,
+ * including custom cell rendering for campaign name, status, total leads,
+ * request status, connection status, and creation date.
+ *
+ * - Uses `@tanstack/react-table` for table structure.
+ * - Integrates icons from `lucide-react` for visual status indicators.
+ * - Applies custom styles and badges for status representation.
+ * - Utilizes `DataTableColumnHeader` for sortable headers.
+ *
+ * @see Campaign
+ * @see campaignStatusStyles
+ * @see DataTableColumnHeader
+ */
 "use client";
 import { ColumnDef } from "@tanstack/react-table";
 import { Campaign, campaignStatusStyles } from "@/lib/data";

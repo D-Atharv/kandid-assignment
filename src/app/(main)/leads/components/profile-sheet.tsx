@@ -78,6 +78,23 @@ const StatusIcon = ({ status }: { status: TimelineEvent["status"] }) => {
   }
 };
 
+/**
+ * Displays a detailed profile sheet for a selected lead, including their avatar, name, title, company, author, status, and timeline of actions.
+ * 
+ * @param open - Boolean indicating whether the profile sheet is open.
+ * @param onOpenChange - Callback function to handle opening and closing of the sheet.
+ * @param selectedLead - The lead object to display details for. If not provided, the sheet is not rendered.
+ * @param onUpdateStatus - Callback function to update the status of the selected lead.
+ * 
+ * Features:
+ * - Shows lead's avatar, name, title, company, and author.
+ * - Allows updating the lead's status via a dropdown menu.
+ * - Provides a contact button for initiating communication.
+ * - Displays additional sender profile info if available.
+ * - Renders a timeline of events related to the lead.
+ * 
+ * @returns A React component rendering the lead profile sheet UI.
+ */
 export function LeadProfileSheet({
   open,
   onOpenChange,

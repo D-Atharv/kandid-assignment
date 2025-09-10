@@ -30,6 +30,19 @@ interface SidebarProps {
   user?: { name: string; email: string } | null;
 }
 
+/**
+ * Renders the sidebar layout component with branding, navigation, and user profile sections.
+ *
+ * @param isCollapsed - Determines if the sidebar is collapsed (shows only icons) or expanded (shows labels and details).
+ * @param user - The current user object containing profile information (e.g., name, email).
+ *
+ * The sidebar includes:
+ * - Branding and profile section at the top.
+ * - Navigation links grouped into sections (Overview, Settings, Admin Panel).
+ * - A bottom section with quick actions and user details, visible only when expanded.
+ *
+ * Uses various icons and custom components for navigation and user display.
+ */
 export function Sidebar({ isCollapsed, user }: SidebarProps) {
   return (
     // This is the "floating card" with its own background and border

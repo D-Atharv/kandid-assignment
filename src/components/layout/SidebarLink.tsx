@@ -11,6 +11,18 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
+/**
+ * Renders a sidebar navigation link with optional icon, label, and badge.
+ * Supports collapsed and expanded sidebar states, showing a tooltip when collapsed.
+ *
+ * @param props - The properties for the SidebarLink component.
+ * @param props.href - The navigation URL for the link.
+ * @param props.icon - The icon component to display.
+ * @param props.label - The label text for the link.
+ * @param props.isCollapsed - Whether the sidebar is collapsed.
+ * @param [props.badge] - Optional badge content to display (string or number).
+ * @returns A sidebar link element with icon, label, and optional badge.
+ */
 export function SidebarLink({
   href,
   icon: Icon,

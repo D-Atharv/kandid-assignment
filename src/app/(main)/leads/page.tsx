@@ -41,6 +41,16 @@ async function updateLeadStatus({
   return res.json();
 }
 
+/**
+ * LeadsPage component displays the Leads Dashboard with infinite scrolling and status update functionality.
+ *
+ * - Fetches leads data using `useInfiniteQuery` for paginated loading.
+ * - Allows optimistic updates of lead status using `useMutation` and query cache manipulation.
+ * - Handles error rollback and query invalidation for data consistency.
+ * - Renders a `LeadsDataTable` with controls for loading more leads and updating lead status.
+ *
+ * @returns {JSX.Element} The rendered Leads Dashboard page.
+ */
 export default function LeadsPage() {
   const queryClient = useQueryClient();
 
