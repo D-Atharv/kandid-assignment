@@ -25,7 +25,12 @@ interface SidebarProps {
   isCollapsed: boolean;
 }
 
-export function Sidebar({ isCollapsed }: SidebarProps) {
+interface SidebarProps {
+  isCollapsed: boolean;
+  user?: { name: string; email: string } | null;
+}
+
+export function Sidebar({ isCollapsed, user }: SidebarProps) {
   return (
     // This is the "floating card" with its own background and border
     <div className="flex h-full flex-col rounded-lg border bg-background">
@@ -33,9 +38,14 @@ export function Sidebar({ isCollapsed }: SidebarProps) {
       <div className="p-4">
         {!isCollapsed ? (
           <>
-            <div className="mb-4 flex items-center justify-center gap-2 text-lg font-bold">
-              <Package className="h-9 w-9 text-primary" />
-              <span>LinkBird</span>
+            <div className="mb-4 flex items-center justify-center font-bold">
+              <Package className="h-9 w-9 text-primary" color="blue" />
+              <span className=" text-2xl">
+                Link
+                <span className="font-medium text-blue-700">
+                  B<span className="text-blue-500">ir</span>d
+                </span>
+              </span>
             </div>
             <div className="flex cursor-pointer items-center gap-2 border-t p-2 text-primary">
               <Avatar className="h-9 w-9 border">
@@ -136,10 +146,10 @@ export function Sidebar({ isCollapsed }: SidebarProps) {
               </Avatar>
               <div className="flex-1 overflow-hidden">
                 <div className="truncate font-semibold">
-                  Bhavya From Kandid...
+                  {user?.name || user?.email || "Guest"}
                 </div>
                 <div className="truncate text-xs text-muted-foreground">
-                  bhavya@kandid.ai
+                  {user?.email || "Guest"}
                 </div>
               </div>
               <RotateCw className="h-4 w-4 cursor-pointer text-muted-foreground" />
